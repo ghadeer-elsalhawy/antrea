@@ -12,23 +12,30 @@
 
   postUpdateOptions: ["gomodTidy"],
 
-  // Don't seperate major, minor and patch in different PRs
+  // Don't separate major, minor and patch in different PRs
   separateMajorMinor: false,
   separateMinorPatch: false,
 
   // Labels to include in the PR
   labels: ["dependencies"],
 
+  // Only make PRs for security vulnerability alerts
+  vulnerabilityAlerts: {
+    enabled: true,
+  },
+
   packageRules: [
     {
       matchManagers: ["gomod"],
       matchPackagePrefixes: ["golang.org/x/"],
       groupName: "Go language dependencies",
+      addLabels: ["go"],
     },
     {
       matchManagers: ["gomod"],
       matchPackagePatterns: ["github.com/prometheus/"],
       groupName: "Prometheus dependencies",
+      addLabels: ["go"],
     },
     {
       matchManagers: ["gomod"],
@@ -37,6 +44,7 @@
         "github.com/onsi/gomega",
       ],
       groupName: "Ginkgo dependencies",
+      addLabels: ["go"],
     },
 
     {
@@ -59,6 +67,7 @@
       matchManagers: ["gomod"],
       matchPackagePrefixes: ["github.com/k8snetworkplumbingwg/"],
       matchUpdateTypes: ["patch"], // Only allow patch updates for these dependencies
+      addLabels: ["go"],
     },
 
     {
@@ -68,6 +77,7 @@
         "actions/download-artifact",
       ],
       groupName: "artifact actions",
+      addLabels: ["github_actions"],
     },
     {
       matchManagers: ["github-actions"],
@@ -76,6 +86,7 @@
         "aquasecurity/trivy-action",
       ],
       groupName: "trivy actions",
+      addLabels: ["github_actions"],
     },
   ],
 }
