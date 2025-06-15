@@ -12,23 +12,32 @@
 
   postUpdateOptions: ["gomodTidy"],
 
-  // Don't seperate major, minor and patch in different PRs
+  // Don't separate major, minor and patch in different PRs
   separateMajorMinor: false,
   separateMinorPatch: false,
 
   // Labels to include in the PR
   labels: ["dependencies"],
 
+  // Only make PRs for security vulnerability alerts
+  vulnerabilityAlerts: {
+    enabled: true,
+  },
+
   packageRules: [
     {
       matchManagers: ["gomod"],
       matchPackagePrefixes: ["golang.org/x/"],
       groupName: "Go language dependencies",
+      matchBaseBranches: ["main", "release-2.3", "release-2.2", "release-2.1"],
+      addLabels: ["go"],
     },
     {
       matchManagers: ["gomod"],
       matchPackagePatterns: ["github.com/prometheus/"],
       groupName: "Prometheus dependencies",
+      matchBaseBranches: ["main", "release-2.3", "release-2.2", "release-2.1"],
+      addLabels: ["go"],
     },
     {
       matchManagers: ["gomod"],
@@ -37,6 +46,8 @@
         "github.com/onsi/gomega",
       ],
       groupName: "Ginkgo dependencies",
+      matchBaseBranches: ["main", "release-2.3", "release-2.2", "release-2.1"],
+      addLabels: ["go"],
     },
 
     {
@@ -59,6 +70,8 @@
       matchManagers: ["gomod"],
       matchPackagePrefixes: ["github.com/k8snetworkplumbingwg/"],
       matchUpdateTypes: ["patch"], // Only allow patch updates for these dependencies
+      matchBaseBranches: ["main", "release-2.3", "release-2.2", "release-2.1"],
+      addLabels: ["go"],
     },
 
     {
@@ -68,6 +81,8 @@
         "actions/download-artifact",
       ],
       groupName: "artifact actions",
+      matchBaseBranches: ["main", "release-2.3", "release-2.2", "release-2.1"],
+      addLabels: ["github_actions"],
     },
     {
       matchManagers: ["github-actions"],
@@ -76,6 +91,8 @@
         "aquasecurity/trivy-action",
       ],
       groupName: "trivy actions",
+      matchBaseBranches: ["main", "release-2.3", "release-2.2", "release-2.1"],
+      addLabels: ["github_actions"],
     },
   ],
 }
