@@ -37,7 +37,7 @@ provider "kubernetes" {
   cluster_ca_certificate = base64decode(data.aws_eks_cluster.cluster.certificate_authority.0.data)
   token                  = data.aws_eks_cluster_auth.cluster.token
   # eks module not yet compatible with newer kubenetes provider 1.11.
-  version                = "1.10"
+  version                = "2.37"
 }
 
 data "aws_availability_zones" "available" {
