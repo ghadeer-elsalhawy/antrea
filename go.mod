@@ -51,7 +51,7 @@ require (
 	github.com/spf13/pflag v1.0.5
 	github.com/stretchr/testify v1.9.0
 	github.com/ti-mo/conntrack v0.5.1
-	github.com/vishvananda/netlink v1.2.1-beta.2.0.20240523162130-1e68b2710dc3
+	github.com/vishvananda/netlink v1.3.1
 	github.com/vmware/go-ipfix v0.9.0
 	go.uber.org/mock v0.4.0
 	golang.org/x/crypto v0.32.0
@@ -210,7 +210,7 @@ require (
 	github.com/stoewer/go-strcase v1.2.0 // indirect
 	github.com/subosito/gotenv v1.4.2 // indirect
 	github.com/ti-mo/netfilter v0.5.2 // indirect
-	github.com/vishvananda/netns v0.0.4 // indirect
+	github.com/vishvananda/netns v0.0.5 // indirect
 	github.com/xlab/treeprint v1.2.0 // indirect
 	gitlab.com/golang-commonmark/puny v0.0.0-20191124015043-9f83538fa04f // indirect
 	go.etcd.io/etcd/api/v3 v3.5.10 // indirect
