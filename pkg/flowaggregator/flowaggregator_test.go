@@ -690,6 +690,7 @@ func TestFlowAggregator_updateFlowAggregator(t *testing.T) {
 func TestFlowAggregator_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockPodStore := podstoretest.NewMockInterface(ctrl)
+	mockPodStore.EXPECT().HasSynced().Return(true)
 	mockIPFIXExporter, mockClickHouseExporter, mockS3Exporter, mockLogExporter := mockExporters(t, ctrl, nil)
 	mockCollectingProcess := ipfixtesting.NewMockIPFIXCollectingProcess(ctrl)
 	mockAggregationProcess := ipfixtesting.NewMockIPFIXAggregationProcess(ctrl)
@@ -958,8 +959,9 @@ func TestFlowAggregator_GetRecordMetrics(t *testing.T) {
 	mockS3Exporter := exportertesting.NewMockInterface(ctrl)
 	mockLogExporter := exportertesting.NewMockInterface(ctrl)
 	want := querier.Metrics{
-		NumRecordsExported:     1,
+		NumRecordsExported:     10,
 		NumRecordsReceived:     1,
+		NumRecordsDropped:      1,
 		NumFlows:               1,
 		NumConnToCollector:     1,
 		WithClickHouseExporter: true,
@@ -971,12 +973,13 @@ func TestFlowAggregator_GetRecordMetrics(t *testing.T) {
 	fa := &flowAggregator{
 		collectingProcess:  mockCollectingProcess,
 		aggregationProcess: mockAggregationProcess,
-		numRecordsExported: 1,
 		clickHouseExporter: mockClickHouseExporter,
 		s3Exporter:         mockS3Exporter,
 		logExporter:        mockLogExporter,
 		ipfixExporter:      mockIPFIXExporter,
 	}
+	fa.numRecordsExported.Store(10)
+	fa.numRecordsDropped.Store(1)
 
 	mockCollectingProcess.EXPECT().GetNumRecordsReceived().Return(int64(1))
 	mockAggregationProcess.EXPECT().GetNumFlows().Return(int64(1))

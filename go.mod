@@ -52,17 +52,17 @@ require (
 	github.com/spf13/cobra v1.9.1
 	github.com/spf13/pflag v1.0.6
 	github.com/stretchr/testify v1.10.0
-	github.com/ti-mo/conntrack v0.5.1
+	github.com/ti-mo/conntrack v0.5.2
 	github.com/vishvananda/netlink v1.3.0
-	github.com/vmware/go-ipfix v0.14.0
+	github.com/vmware/go-ipfix v0.15.0
 	go.uber.org/mock v0.5.0
-	golang.org/x/crypto v0.38.0
-	golang.org/x/mod v0.24.0
-	golang.org/x/net v0.40.0
-	golang.org/x/sync v0.14.0
+	golang.org/x/crypto v0.39.0
+	golang.org/x/mod v0.25.0
+	golang.org/x/net v0.41.0
+	golang.org/x/sync v0.15.0
 	golang.org/x/sys v0.33.0
-	golang.org/x/time v0.11.0
-	golang.org/x/tools v0.33.0
+	golang.org/x/time v0.12.0
+	golang.org/x/tools v0.34.0
 	golang.zx2c4.com/wireguard/wgctrl v0.0.0-20210506160403-92e472f520a5
 	google.golang.org/grpc v1.72.0
 	google.golang.org/protobuf v1.36.6
@@ -213,7 +213,7 @@ require (
 	github.com/spf13/viper v1.16.0 // indirect
 	github.com/stoewer/go-strcase v1.2.0 // indirect
 	github.com/subosito/gotenv v1.4.2 // indirect
-	github.com/ti-mo/netfilter v0.5.2 // indirect
+	github.com/ti-mo/netfilter v0.5.3 // indirect
 	github.com/vishvananda/netns v0.0.4 // indirect
 	github.com/x448/float16 v0.8.4 // indirect
 	github.com/xlab/treeprint v1.2.0 // indirect
@@ -238,7 +238,7 @@ require (
 	golang.org/x/exp v0.0.0-20240719175910-8a7402abbf56 // indirect
 	golang.org/x/oauth2 v0.26.0 // indirect
 	golang.org/x/term v0.32.0 // indirect
-	golang.org/x/text v0.25.0 // indirect
+	golang.org/x/text v0.26.0 // indirect
 	golang.zx2c4.com/wireguard v0.0.0-20210427022245-097af6e1351b // indirect
 	gomodules.xyz/jsonpatch/v2 v2.4.0 // indirect
 	google.golang.org/genproto/googleapis/api v0.0.0-20250218202821-56aae31c358a // indirect

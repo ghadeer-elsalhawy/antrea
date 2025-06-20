@@ -16,12 +16,15 @@ package flowaggregator
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net"
 	"os"
 	"path/filepath"
 	"sync"
+	"sync/atomic"
 	"time"
 
 	"github.com/fsnotify/fsnotify"
@@ -30,6 +33,7 @@ import (
 	ipfixentities "github.com/vmware/go-ipfix/pkg/entities"
 	ipfixintermediate "github.com/vmware/go-ipfix/pkg/intermediate"
 	ipfixregistry "github.com/vmware/go-ipfix/pkg/registry"
+	"k8s.io/apimachinery/pkg/util/wait"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/klog/v2"
 
@@ -116,7 +120,8 @@ type flowAggregator struct {
 	includePodLabels            bool
 	k8sClient                   kubernetes.Interface
 	podStore                    podstore.Interface
-	numRecordsExported          int64
+	numRecordsExported          atomic.Int64
+	numRecordsDropped           atomic.Int64
 	updateCh                    chan *options.Options
 	configFile                  string
 	configWatcher               *fsnotify.Watcher
@@ -128,6 +133,7 @@ type flowAggregator struct {
 	logExporter                 exporter.Interface
 	logTickerDuration           time.Duration
 	preprocessorOutCh           chan *ipfixentities.Message
+	exportersMutex              sync.Mutex
 }
 
 func NewFlowAggregator(
@@ -364,6 +370,19 @@ func (fa *flowAggregator) InitAggregationProcess() error {
 func (fa *flowAggregator) Run(stopCh <-chan struct{}) {
 	var wg, ipfixProcessesWg sync.WaitGroup
 
+	// We first wait for the PodStore to sync to avoid lookup failures when processing records.
+	const podStoreSyncTimeout = 30 * time.Second
+	klog.InfoS("Waiting for PodStore to sync", "timeout", podStoreSyncTimeout)
+	if err := wait.PollUntilContextTimeout(wait.ContextForChannel(stopCh), 100*time.Millisecond, podStoreSyncTimeout, true, func(ctx context.Context) (done bool, err error) {
+		return fa.podStore.HasSynced(), nil
+	}); err != nil {
+		// PodStore not synced within a reasonable time. We continue with the rest of the
+		// function but there may be error logs when processing records.
+		klog.ErrorS(err, "PodStore not synced", "timeout", podStoreSyncTimeout)
+	} else {
+		klog.InfoS("PodStore synced")
+	}
+
 	ipfixProcessesWg.Add(1)
 	go func() {
 		// Waiting for this function to return on stop makes it easier to set expectations
@@ -580,9 +599,15 @@ func (fa *flowAggregator) flowExportLoopProxy(stopCh <-chan struct{}) {
 			return
 		}
 
+		obsDomainID := msg.GetObsDomainID()
+		exporterAddress := msg.GetExportAddress()
 		records := set.GetRecords()
 		for _, record := range records {
-			if err := fa.proxyRecord(record, msg.GetObsDomainID(), msg.GetExportAddress()); err != nil {
+			if err := fa.proxyRecord(record, obsDomainID, exporterAddress); err != nil {
+				fa.numRecordsDropped.Add(1)
+				if errors.Is(err, exporter.ErrIPFIXExporterBackoff) {
+					continue
+				}
 				klog.ErrorS(err, "Failed to proxy record")
 			}
 		}
@@ -606,7 +631,8 @@ func (fa *flowAggregator) flowExportLoopProxy(stopCh <-chan struct{}) {
 		case <-logTicker.C:
 			// Add visibility of processing stats of Flow Aggregator
 			klog.V(4).InfoS("Total number of records received", "count", fa.collectingProcess.GetNumRecordsReceived())
-			klog.V(4).InfoS("Total number of records exported by each active exporter", "count", fa.numRecordsExported)
+			klog.V(4).InfoS("Total number of records exported by each active exporter", "count", fa.numRecordsExported.Load())
+			klog.V(4).InfoS("Total number of records dropped", "count", fa.numRecordsDropped.Load())
 			klog.V(4).InfoS("Number of exporters connected with Flow Aggregator", "count", fa.collectingProcess.GetNumConnToCollector())
 		case opt, ok := <-updateCh:
 			if !ok {
@@ -649,7 +675,7 @@ func (fa *flowAggregator) flowExportLoopAggregate(stopCh <-chan struct{}) {
 		case <-logTicker.C:
 			// Add visibility of processing stats of Flow Aggregator
 			klog.V(4).InfoS("Total number of records received", "count", fa.collectingProcess.GetNumRecordsReceived())
-			klog.V(4).InfoS("Total number of records exported by each active exporter", "count", fa.numRecordsExported)
+			klog.V(4).InfoS("Total number of records exported by each active exporter", "count", fa.numRecordsExported.Load())
 			klog.V(4).InfoS("Total number of flows stored in Flow Aggregator", "count", fa.aggregationProcess.GetNumFlows())
 			klog.V(4).InfoS("Number of exporters connected with Flow Aggregator", "count", fa.collectingProcess.GetNumConnToCollector())
 		case opt, ok := <-updateCh:
@@ -687,7 +713,7 @@ func (fa *flowAggregator) sendRecord(record ipfixentities.Record, isRecordIPv6 b
 			return err
 		}
 	}
-	fa.numRecordsExported = fa.numRecordsExported + 1
+	fa.numRecordsExported.Add(1)
 	return nil
 }
 
@@ -910,16 +936,20 @@ func (fa *flowAggregator) getNumFlows() int64 {
 }
 
 func (fa *flowAggregator) GetRecordMetrics() querier.Metrics {
-	return querier.Metrics{
-		NumRecordsExported:     fa.numRecordsExported,
-		NumRecordsReceived:     fa.collectingProcess.GetNumRecordsReceived(),
-		NumFlows:               fa.getNumFlows(),
-		NumConnToCollector:     fa.collectingProcess.GetNumConnToCollector(),
-		WithClickHouseExporter: fa.clickHouseExporter != nil,
-		WithS3Exporter:         fa.s3Exporter != nil,
-		WithLogExporter:        fa.logExporter != nil,
-		WithIPFIXExporter:      fa.ipfixExporter != nil,
+	metrics := querier.Metrics{
+		NumRecordsExported: fa.numRecordsExported.Load(),
+		NumRecordsReceived: fa.collectingProcess.GetNumRecordsReceived(),
+		NumRecordsDropped:  fa.numRecordsDropped.Load(),
+		NumFlows:           fa.getNumFlows(),
+		NumConnToCollector: fa.collectingProcess.GetNumConnToCollector(),
 	}
+	fa.exportersMutex.Lock()
+	defer fa.exportersMutex.Unlock()
+	metrics.WithClickHouseExporter = fa.clickHouseExporter != nil
+	metrics.WithS3Exporter = fa.s3Exporter != nil
+	metrics.WithLogExporter = fa.logExporter != nil
+	metrics.WithIPFIXExporter = fa.ipfixExporter != nil
+	return metrics
 }
 
 func (fa *flowAggregator) watchConfiguration(stopCh <-chan struct{}) {
@@ -973,6 +1003,11 @@ func (fa *flowAggregator) handleWatcherEvent() error {
 }
 
 func (fa *flowAggregator) updateFlowAggregator(opt *options.Options) {
+	// This function potentially modifies the exporter pointer fields (e.g.,
+	// fa.ipfixExporter). We protect these writes by locking fa.exportersMutex, so that
+	// GetRecordMetrics() can safely read the fields (by also locking the mutex).
+	fa.exportersMutex.Lock()
+	defer fa.exportersMutex.Unlock()
 	// If user tries to change the mode dynamically, it makes sense to error out immediately and
 	// ignore other updates, as this is such a major configuration parameter.
 	// Unsupported "minor" updates are handled at the end of this function.
