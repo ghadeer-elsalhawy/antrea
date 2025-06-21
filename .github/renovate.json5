@@ -6,6 +6,9 @@
     "helpers:pinGitHubActionDigests", // Pins GitHub Actions to exact commit SHAs for security
   ],
 
+  // Allow only certain package managers and implicitly disable all others
+  enabledManagers: ["gomod", "github-actions"],
+
   // Active release branches
   baseBranches: [
     "main",
