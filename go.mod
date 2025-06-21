@@ -54,13 +54,13 @@ require (
 	github.com/vishvananda/netlink v1.2.1-beta.2.0.20240523162130-1e68b2710dc3
 	github.com/vmware/go-ipfix v0.9.0
 	go.uber.org/mock v0.4.0
-	golang.org/x/crypto v0.38.0
-	golang.org/x/mod v0.19.0
-	golang.org/x/net v0.40.0
-	golang.org/x/sync v0.14.0
+	golang.org/x/crypto v0.39.0
+	golang.org/x/mod v0.25.0
+	golang.org/x/net v0.41.0
+	golang.org/x/sync v0.15.0
 	golang.org/x/sys v0.33.0
-	golang.org/x/time v0.5.0
-	golang.org/x/tools v0.23.0
+	golang.org/x/time v0.12.0
+	golang.org/x/tools v0.34.0
 	golang.zx2c4.com/wireguard/wgctrl v0.0.0-20210506160403-92e472f520a5
 	google.golang.org/grpc v1.65.0
 	google.golang.org/protobuf v1.36.6
@@ -233,7 +233,7 @@ require (
 	golang.org/x/exp v0.0.0-20220722155223-a9213eeb770e // indirect
 	golang.org/x/oauth2 v0.30.0 // indirect
 	golang.org/x/term v0.32.0 // indirect
-	golang.org/x/text v0.25.0 // indirect
+	golang.org/x/text v0.26.0 // indirect
 	golang.zx2c4.com/wireguard v0.0.0-20210427022245-097af6e1351b // indirect
 	gomodules.xyz/jsonpatch/v2 v2.4.0 // indirect
 	google.golang.org/genproto v0.0.0-20240227224415-6ceb2ff114de // indirect
