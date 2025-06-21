@@ -107,6 +107,12 @@
       addLabels: ["go"],
     },
 
+    // Block other updates not explicitly mentioned
+    {
+      matchManagers: ["gomod"],
+      enabled: false,
+    },
+
     {
       matchManagers: ["github-actions"],
       matchPackageNames: [
