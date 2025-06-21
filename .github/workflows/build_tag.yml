@@ -23,7 +23,7 @@ jobs:
     runs-on: [ubuntu-latest]
     needs: get-version
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       with:
         show-progress: false
     - name: Build and push Antrea Ubuntu amd64 Docker image to registry
@@ -39,7 +39,7 @@ jobs:
         docker push antrea/antrea-agent-ubuntu-amd64:"${VERSION}"
         docker push antrea/antrea-controller-ubuntu-amd64:"${VERSION}"
     - name: Trigger Antrea arm builds and multi-arch manifest update
-      uses: benc-uk/workflow-dispatch@v1
+      uses: benc-uk/workflow-dispatch@e2e5e9a103e331dad343f381a29e654aea3cf8fc # v1
       with:
         repo: vmware-tanzu/antrea-build-infra
         ref: refs/heads/main
@@ -51,7 +51,7 @@ jobs:
     runs-on: [ubuntu-latest]
     needs: get-version
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
           show-progress: false
       - name: Build and push Antrea UBI9 amd64 Docker image to registry
@@ -69,7 +69,7 @@ jobs:
     runs-on: [windows-2019]
     needs: get-version
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       with:
         show-progress: false
     - name: Build Antrea Windows Docker image and push to registry
@@ -87,7 +87,7 @@ jobs:
     runs-on: [ubuntu-latest]
     needs: get-version
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       with:
         show-progress: false
     - name: Build antrea-mc-controller Docker image and push to registry
@@ -104,7 +104,7 @@ jobs:
     runs-on: [ubuntu-latest]
     needs: get-version
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       with:
         show-progress: false
     - name: Build flow-aggregator Docker image and push to registry
