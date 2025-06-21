@@ -33,6 +33,8 @@
     enabled: true,
   },
 
+  recreateWhen: "always",
+
   packageRules: [
     {
       matchManagers: ["gomod"],
