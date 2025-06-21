@@ -10,7 +10,13 @@
   enabledManagers: ["gomod", "github-actions"],
 
   // Active release branches
-  baseBranches: ["main", "release-2.3", "release-2.2", "release-2.1"],
+  baseBranches: [
+    "main",
+    "release-2.3",
+    "release-2.2",
+    "release-2.1",
+    "release-2.0",
+  ],
   prConcurrentLimit: 20,
 
   postUpdateOptions: ["gomodTidy"],
@@ -32,15 +38,27 @@
       matchManagers: ["gomod"],
       matchPackagePrefixes: ["golang.org/x/"],
       groupName: "Go language dependencies",
-      matchBaseBranches: ["main", "release-2.3", "release-2.2", "release-2.1"],
+      matchBaseBranches: [
+        "main",
+        "release-2.3",
+        "release-2.2",
+        "release-2.1",
+        "release-2.0",
+      ],
       addLabels: ["go"],
       enabled: true,
     },
     {
       matchManagers: ["gomod"],
-      matchPackagePatterns: ["github.com/prometheus/"],
+      matchPackagePrefixes: ["github.com/prometheus/"],
       groupName: "Prometheus dependencies",
-      matchBaseBranches: ["main", "release-2.3", "release-2.2", "release-2.1"],
+      matchBaseBranches: [
+        "main",
+        "release-2.3",
+        "release-2.2",
+        "release-2.1",
+        "release-2.0",
+      ],
       addLabels: ["go"],
       enabled: true,
     },
@@ -51,7 +69,13 @@
         "github.com/onsi/gomega",
       ],
       groupName: "Ginkgo dependencies",
-      matchBaseBranches: ["main", "release-2.3", "release-2.2", "release-2.1"],
+      matchBaseBranches: [
+        "main",
+        "release-2.3",
+        "release-2.2",
+        "release-2.1",
+        "release-2.0",
+      ],
       addLabels: ["go"],
       enabled: true,
     },
@@ -76,16 +100,16 @@
       matchManagers: ["gomod"],
       matchPackagePrefixes: ["github.com/k8snetworkplumbingwg/"],
       matchUpdateTypes: ["patch"], // Only allow patch updates for these dependencies
-      matchBaseBranches: ["main", "release-2.3", "release-2.2", "release-2.1"],
+      matchBaseBranches: [
+        "main",
+        "release-2.3",
+        "release-2.2",
+        "release-2.1",
+        "release-2.0",
+      ],
       addLabels: ["go"],
       enabled: true,
     },
-
-    // Block other updates not explicitly mentioned
-    // {
-    // matchManagers: ["gomod"],
-    // enabled: false,
-    // },
 
     {
       matchManagers: ["github-actions"],
@@ -94,7 +118,13 @@
         "actions/download-artifact",
       ],
       groupName: "artifact actions",
-      matchBaseBranches: ["main", "release-2.3", "release-2.2", "release-2.1"],
+      matchBaseBranches: [
+        "main",
+        "release-2.3",
+        "release-2.2",
+        "release-2.1",
+        "release-2.0",
+      ],
       addLabels: ["github_actions"],
       enabled: true,
     },
@@ -105,14 +135,15 @@
         "aquasecurity/trivy-action",
       ],
       groupName: "trivy actions",
-      matchBaseBranches: ["main", "release-2.3", "release-2.2", "release-2.1"],
+      matchBaseBranches: [
+        "main",
+        "release-2.3",
+        "release-2.2",
+        "release-2.1",
+        "release-2.0",
+      ],
       addLabels: ["github_actions"],
       enabled: true,
     },
-    // Block other updates not explicitly mentioned
-    // {
-    // matchManagers: ["github-actions"],
-    // enabled: false,
-    // },
   ],
 }
