@@ -11,7 +11,7 @@
 
   // Active release branches
   baseBranches: ["main", "release-2.3", "release-2.2", "release-2.1"],
-  prConcurrentLimit: 5,
+  prConcurrentLimit: 15,
 
   postUpdateOptions: ["gomodTidy"],
 
@@ -21,6 +21,8 @@
 
   // Labels to include in the PR
   labels: ["dependencies"],
+
+  branchPrefix: "renovate/{{baseBranch}}/",
 
   // Only make PRs for security vulnerability alerts
   vulnerabilityAlerts: {
