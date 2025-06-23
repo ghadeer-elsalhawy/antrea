@@ -22,6 +22,8 @@
   // Labels to include in the PR
   labels: ["dependencies"],
 
+  recreateWhen: "always",
+
   // Only make PRs for security vulnerability alerts
   vulnerabilityAlerts: {
     enabled: true,
@@ -30,8 +32,14 @@
   packageRules: [
     {
       matchManagers: ["gomod"],
+      addLabels: ["go"],
+    },
+
+    {
+      matchManagers: ["gomod"],
       matchPackagePrefixes: ["golang.org/x/"],
       groupName: "Go language dependencies",
+      groupSlug: "go-language-dependencies",
       matchBaseBranches: ["main", "release-2.3", "release-2.2", "release-2.1"],
       addLabels: ["go"],
       enabled: true,
@@ -41,6 +49,7 @@
       matchManagers: ["gomod"],
       matchPackagePrefixes: ["github.com/prometheus/"],
       groupName: "Prometheus dependencies",
+      groupSlug: "prometheus-dependencies",
       matchBaseBranches: ["main", "release-2.3", "release-2.2", "release-2.1"],
       addLabels: ["go"],
       enabled: true,
@@ -53,6 +62,7 @@
         "github.com/onsi/gomega",
       ],
       groupName: "Ginkgo dependencies",
+      groupSlug: "ginko-dependencies",
       matchBaseBranches: ["main", "release-2.3", "release-2.2", "release-2.1"],
       addLabels: ["go"],
       enabled: true,
@@ -77,10 +87,13 @@
     {
       matchManagers: ["gomod"],
       matchPackagePrefixes: ["github.com/k8snetworkplumbingwg/"],
-      matchUpdateTypes: ["patch"], // Only allow patch updates for these dependencies
-      matchBaseBranches: ["main", "release-2.3", "release-2.2", "release-2.1"],
-      addLabels: ["go"],
-      enabled: true,
+      matchUpdateTypes: ["major", "minor"], // Only allow patch updates for these dependencies
+      enabled: false,
+    },
+
+    {
+      matchManagers: ["github-actions"],
+      addLabels: ["github_actions"],
     },
 
     {
