@@ -12,6 +12,7 @@
   // Active release branches
   baseBranches: ["main", "release-2.3", "release-2.2", "release-2.1"],
   prConcurrentLimit: 15,
+  prHourlyLimit: 0,
 
   postUpdateOptions: ["gomodTidy"],
 
@@ -21,9 +22,6 @@
 
   // Labels to include in the PR
   labels: ["dependencies"],
-
-  recreateWhen: "always",
-  prHourlyLimit: 0,
 
   // Only make PRs for security vulnerability alerts
   vulnerabilityAlerts: {
@@ -93,13 +91,6 @@
     },
 
     {
-      // Disable updates for the windows GitHub runner image
-      matchManagers: ["github-actions"],
-      matchPackageNames: ["windows"],
-      enabled: false,
-    },
-
-    {
       matchManagers: ["github-actions"],
       addLabels: ["github_actions"],
     },
@@ -126,6 +117,13 @@
       matchBaseBranches: ["main", "release-2.3", "release-2.2", "release-2.1"],
       addLabels: ["github_actions"],
       enabled: true,
+    },
+
+    {
+      // Disable updates for the windows GitHub runner image
+      matchManagers: ["github-actions"],
+      matchPackageNames: ["windows"],
+      enabled: false,
     },
   ],
 }
