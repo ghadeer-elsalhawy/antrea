@@ -23,6 +23,7 @@
   labels: ["dependencies"],
 
   recreateWhen: "always",
+  prHourlyLimit: 0,
 
   // Only make PRs for security vulnerability alerts
   vulnerabilityAlerts: {
