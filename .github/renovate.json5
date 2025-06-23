@@ -93,6 +93,13 @@
     },
 
     {
+      // Disable updates for the windows GitHub runner image
+      matchManagers: ["github-actions"],
+      matchPackageNames: ["windows"],
+      enabled: false,
+    },
+
+    {
       matchManagers: ["github-actions"],
       addLabels: ["github_actions"],
     },
