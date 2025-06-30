@@ -23,7 +23,7 @@ if (( prev2 >= 0 )); then
     branches+=("release-2.$prev2")
 fi
 
-branches_str=$(printf '"%s",' "${branches[@]}")
+branches_str=$(printf '"%s", ' "${branches[@]}")
 branches_str="[${branches_str%,}]"  # remove trailing comma and add brackets
 
 replacement="  baseBranches: $branches_str,"
