@@ -27,10 +27,10 @@ jobs:
       - name: Commit changes if any
         run: |
           git add .
-          git diff --cached --quiet || git commit -m "Update JSON file via workflow"
+          git diff --cached --quiet || git commit -s -m "Update JSON file via workflow"
 
       - name: Push changes to main branch
-        uses: ad-m/github-push-action@v0.6.0
-        with:
-          github_token: ${{ secrets.ANTREA_WORKFLOW }}
-          branch: main
+        run: |
+          git push origin main || echo "No changes to push"
+        env:
+          GITHUB_TOKEN: ${{ secrets.ANTREA_WORKFLOW }}
