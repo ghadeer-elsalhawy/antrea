@@ -28,6 +28,6 @@ branches_str="[${branches_str%,}]"  # remove trailing comma and add brackets
 
 replacement="baseBranches: $branches_str,"
 
-file=".github/renovate.json5"
+file="../.github/renovate.json5"
 
 sed -i.bak -E "s|^\s*baseBranches:.*|$replacement|" "$file"
