@@ -26,7 +26,7 @@ fi
 branches_str=$(printf '"%s",' "${branches[@]}")
 branches_str="[${branches_str%,}]"  # remove trailing comma and add brackets
 
-replacement="baseBranches: $branches_str,"
+replacement="  baseBranches: $branches_str,"
 
 file="../.github/renovate.json5"
 
