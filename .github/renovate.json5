@@ -10,7 +10,7 @@
   enabledManagers: ["gomod", "github-actions"],
 
   // Active release branches
-  baseBranches: ["main", "release-2.3", "release-2.2", "release-2.1"],
+  baseBranches: ["main","release-2.5","release-2.4","release-2.3"],
   prConcurrentLimit: 9,
   branchConcurrentLimit: 3,
   prHourlyLimit: 0,
