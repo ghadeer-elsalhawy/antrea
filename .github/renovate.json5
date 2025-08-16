@@ -12,7 +12,6 @@
   // Active release branches
   baseBranches: ["main", "release-2.4", "release-2.3", "release-2.2"],
   prConcurrentLimit: 9,
-  branchConcurrentLimit: 3,
   prHourlyLimit: 0,
 
   postUpdateOptions: ["gomodTidy"],
@@ -30,6 +29,14 @@
   },
 
   packageRules: [
+    // Disable all regular updates for active release branches
+    {
+      matchBaseBranches: ["release-2.4", "release-2.3", "release-2.2"],
+      groupName: "all dependencies active release branches",
+      groupSlug: "all-deps-active-release-branches",
+      enabled: false,
+    },
+
     // Update source import paths on major updates of Go dependencies
     {
       groupName: "all go dependencies main",
