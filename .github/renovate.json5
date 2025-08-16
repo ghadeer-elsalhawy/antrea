@@ -37,6 +37,13 @@
       enabled: false,
     },
 
+    // Disable indirect go dependencies updates, resource: https://github.com/renovatebot/renovate/discussions/35225#discussioncomment-13666269
+    {
+      matchManagers: ["gomod"],
+      matchDepTypes: ["indirect"],
+      enabled: false,
+    },
+
     // Update source import paths on major updates of Go dependencies
     {
       groupName: "all go dependencies main",
