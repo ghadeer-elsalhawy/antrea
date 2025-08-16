@@ -11,14 +11,14 @@ require (
 	github.com/Microsoft/go-winio v0.6.2
 	github.com/Microsoft/hcsshim v0.11.4
 	github.com/TomCodeLV/OVSDB-golang-lib v0.0.0-20200116135253-9bbdfadcd881
-	github.com/aws/aws-sdk-go-v2 v1.16.10
+	github.com/aws/aws-sdk-go-v2 v1.10.0
 	github.com/aws/aws-sdk-go-v2/config v1.16.0
 	github.com/aws/aws-sdk-go-v2/feature/s3/manager v1.11.23
 	github.com/aws/aws-sdk-go-v2/service/s3 v1.27.4
 	github.com/blang/semver v3.5.1+incompatible
 	github.com/cheggaaa/pb/v3 v3.1.6
-	github.com/containernetworking/cni v1.2.0
-	github.com/containernetworking/plugins v0.9.1
+	github.com/containernetworking/cni v0.8.0
+	github.com/containernetworking/plugins v0.7.0
 	github.com/coreos/go-iptables v0.8.0
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc
 	github.com/fatih/color v1.18.0
