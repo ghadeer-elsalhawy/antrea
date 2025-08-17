@@ -6,7 +6,7 @@ VERSION1="$1"
 VERSION2="$2" 
 VERSION3="$3"
 
-RENOVATE_CONFIG="../.github/renovate.json5"
+RENOVATE_CONFIG=".github/renovate.json5"
 
 if [[ ! -f "$RENOVATE_CONFIG" ]]; then
     echo "Error: Renovate config file not found at $RENOVATE_CONFIG"

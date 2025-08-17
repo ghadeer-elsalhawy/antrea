@@ -48,6 +48,7 @@ jobs:
             echo "version1=${versions[0]}" >> $GITHUB_OUTPUT
             echo "version2=${versions[1]}" >> $GITHUB_OUTPUT
             echo "version3=${versions[2]}" >> $GITHUB_OUTPUT
+            echo "Latest versions: ${versions[0]}, ${versions[1]}, ${versions[2]}"  // Testing workflow
           else
             echo "Could not find the release branches. Found: ${#versions[@]}"
             exit 0
