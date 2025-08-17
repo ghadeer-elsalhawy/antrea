@@ -1,33 +1,25 @@
 #!/bin/bash
+
 set -euo pipefail
 
-branch_name="$1"
+VERSION1="$1"
+VERSION2="$2" 
+VERSION3="$3"
 
-if [[ ! "$branch_name" =~ ^release-2\.([0-9]+)$ ]]; then
-    echo "Error: branch name must be in format release-2.X where X is a number"
+RENOVATE_CONFIG="../.github/renovate.json5"
+
+if [[ ! -f "$RENOVATE_CONFIG" ]]; then
+    echo "Error: Renovate config file not found at $RENOVATE_CONFIG"
     exit 1
 fi
 
-suffix="${BASH_REMATCH[1]}"
+echo "Updating renovate configuration with versions: $VERSION1, $VERSION2, $VERSION3"
 
-# Calculate previous two suffixes
-prev1=$((suffix - 1))
-prev2=$((suffix - 2))
+sed -i.bak "s/baseBranches: \[\"main\", \"[^\"]*\", \"[^\"]*\", \"[^\"]*\"\],/baseBranches: [\"main\", \"$VERSION1\", \"$VERSION2\", \"$VERSION3\"],/" "$RENOVATE_CONFIG"
 
-# Construct previous branch names, only if prev1 and prev2 >= 0
-branches=("main" "$branch_name")
-if (( prev1 >= 0 )); then
-    branches+=("release-2.$prev1")
-fi
-if (( prev2 >= 0 )); then
-    branches+=("release-2.$prev2")
-fi
+# Update first matchBaseBranches occurrence that disables regular updates for active release branches
+sed -i.bak2 "0,/matchBaseBranches: \[\"[^\"]*\", \"[^\"]*\", \"[^\"]*\"\],/{s/matchBaseBranches: \[\"[^\"]*\", \"[^\"]*\", \"[^\"]*\"\],/matchBaseBranches: [\"$VERSION1\", \"$VERSION2\", \"$VERSION3\"],/}" "$RENOVATE_CONFIG"
 
-branches_str=$(printf '"%s", ' "${branches[@]}")
-branches_str="[${branches_str%,}]"  # remove trailing comma and add brackets
+rm -f "$RENOVATE_CONFIG.bak" "$RENOVATE_CONFIG.bak2"
 
-replacement="  baseBranches: $branches_str,"
-
-file="../.github/renovate.json5"
-
-sed -i.bak -E "s|^\s*baseBranches:.*|$replacement|" "$file"
+echo "Successfully updated $RENOVATE_CONFIG"
