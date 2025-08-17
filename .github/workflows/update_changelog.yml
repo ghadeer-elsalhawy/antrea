@@ -110,7 +110,7 @@ jobs:
           bash hack/update-renovate-baseBranches.sh "$VERSION1" "$VERSION2" "$VERSION3"
           if ! git diff --quiet; then
             git add .
-            git commit --signoff -m "chore(renovate): update baseBranches configuration after ${{ needs.check-version.outputs.version }} release"
+            git commit --signoff -m "chore(renovate): update baseBranches configuration"
           fi
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v7
