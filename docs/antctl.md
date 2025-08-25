@@ -581,7 +581,7 @@ local path to the pcapng file as it exits. Users can also create a PacketCapture
 with `kubectl`, but `antctl` makes it easier. For more information about PacketCapture,
 refer to [PacketCapture guide](packetcapture-guide.md).
 
-To start a PacketCapture, users must provide the following arguments:
+To start a PacketCapture, users must provide `--number` and at least one of `--source` or `--destination`.
 
 * `--source` (or `-S`)
 * `--destination` (or `-D`)
@@ -596,6 +596,12 @@ include: IP protocol (`icmp`, `tcp`, `udp`), source and destination ports
 (`tcp_src`, `tcp_dst`, `udp_src`, `udp_dst`), TCP flags (`tcp_flags`) and ICMP messages (`icmp_type`, `icmp_code`).
 The `icmp_type` value can be provided in either numeric or string type (`icmp-echo`, `icmp-echoreply`, `icmp-unreach`, `icmp-timxceed`),
 and the `icmp_code` value can be provided in only numeric type.
+
+The `--direction` (or `-d`) argument can be used to specify the capture direction. Valid values are:
+
+* `SourceToDestination` (default): Capture packets flowing from source to destination
+* `DestinationToSource`: Capture packets flowing from destination to source
+* `Both`: Capture packets flowing in both directions
 
 By default, the command will wait for the PacketCapture to succeed or fail, or to
 timeout. The default timeout is 60 seconds, but can be changed with the
@@ -620,6 +626,8 @@ $ antctl packetcapture -S pod1 -D pod2 -f udp,udp_dst=1234
 $ antctl packetcapture -S pod1 -D pod2 -f icmp,icmp_type=icmp-unreach,icmp_code=1
 # Start capturing ICMP echo packets from pod1 to pod2
 $ antctl packetcapture -S pod1 -D pod2 -f icmp,icmp_type=8
+# Start capturing packets in both directions between pod1 and pod2
+$ antctl packetcapture -S pod1 -D pod2 -d Both
 # Save the packets file to a specified directory
 $ antctl packetcapture -S 192.168.123.123 -D pod2 -f tcp,tcp_dst=80 -o /tmp
 ```
@@ -634,7 +642,7 @@ To run a reverse proxy for the Antrea Controller API, use:
 
 ```bash
 antctl proxy --controller
-````
+```
 
 To run a reverse proxy for the Antrea Agent API for the antrea-agent Pod running
 on Node <TARGET_NODE>, use:

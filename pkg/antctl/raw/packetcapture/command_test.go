@@ -90,6 +90,24 @@ func TestPacketCaptureRun(t *testing.T) {
 			},
 		},
 		{
+			name: "src-pod-only",
+			option: packetCaptureOptions{
+				source: srcPod,
+				dest:   "",
+				flow:   "tcp,tcp_src=50060,tcp_dst=80",
+				number: testNum,
+			},
+		},
+		{
+			name: "dst-pod-only",
+			option: packetCaptureOptions{
+				source: "",
+				dest:   dstPod,
+				flow:   "tcp,tcp_src=50060,tcp_dst=80",
+				number: testNum,
+			},
+		},
+		{
 			name: "pod-2-ip",
 			option: packetCaptureOptions{
 				source: srcPod,
@@ -274,6 +292,14 @@ func TestNewPacketCapture(t *testing.T) {
 			},
 		},
 		{
+			name: "no-src-and-dst",
+			option: packetCaptureOptions{
+				source: "",
+				dest:   "",
+			},
+			expectErr: "must specify at least one of --source or --destination",
+		},
+		{
 			name: "no-pod",
 			option: packetCaptureOptions{
 				source: "127.0.0.1",
@@ -316,6 +342,51 @@ func TestNewPacketCapture(t *testing.T) {
 				flow:   "icmp,icmp_code=3",
 			},
 			expectErr: "failed to parse flow: icmp_type must be specified when icmp_code is provided",
+		},
+		{
+			name: "pod-2-pod-with-direction-both",
+			option: packetCaptureOptions{
+				source:    srcPod,
+				dest:      dstPod,
+				number:    testNum,
+				direction: "Both",
+			},
+			expectPC: &v1alpha1.PacketCapture{
+				Spec: v1alpha1.PacketCaptureSpec{
+					Source: v1alpha1.Source{
+						Pod: &v1alpha1.PodReference{
+							Namespace: "default",
+							Name:      "pod-1",
+						},
+					},
+					Destination: v1alpha1.Destination{
+						Pod: &v1alpha1.PodReference{
+							Namespace: "default",
+							Name:      "pod-2",
+						},
+					},
+					Direction: v1alpha1.CaptureDirectionBoth,
+					Timeout:   ptr.To(int32(0)),
+					CaptureConfig: v1alpha1.CaptureConfig{
+						FirstN: &v1alpha1.PacketCaptureFirstNConfig{
+							Number: testNum,
+						},
+					},
+					Packet: &v1alpha1.Packet{
+						IPFamily: v1.IPv4Protocol,
+					},
+				},
+			},
+		},
+		{
+			name: "pod-2-pod-with-invalid-direction",
+			option: packetCaptureOptions{
+				source:    srcPod,
+				dest:      dstPod,
+				number:    testNum,
+				direction: "InvalidDirection",
+			},
+			expectErr: "invalid direction: \"InvalidDirection\", must be one of SourceToDestination, DestinationToSource, or Both",
 		},
 	}
 
