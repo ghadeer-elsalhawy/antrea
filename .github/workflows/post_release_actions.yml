@@ -90,7 +90,7 @@ jobs:
 
   pr-update-renovate:
     runs-on: [ubuntu-latest]
-    needs: [get-latest-monitored-versions]
+    needs: get-latest-monitored-versions
     if: ${{ needs.get-latest-monitored-versions.outputs.version1 != '' }}
     steps:
       - uses: actions/checkout@v5

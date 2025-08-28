@@ -45,15 +45,6 @@
       enabled: false,
     },
 
-    // Update source import paths on major updates of Go dependencies
-    {
-      groupName: "all go dependencies main",
-      groupSlug: "all-go-deps-main",
-      matchFiles: ["go.mod", "go.sum"],
-      postUpdateOptions: ["gomodUpdateImportPaths"],
-      matchBaseBranches: ["main"],
-    },
-
     {
       matchManagers: ["gomod"],
       matchBaseBranches: ["main"],
@@ -63,8 +54,8 @@
     {
       matchManagers: ["gomod"],
       matchPackagePrefixes: ["golang.org/x/"],
-      groupName: "Go language dependencies",
-      groupSlug: "go-language-dependencies",
+      groupName: "golang.org/x",
+      groupSlug: "golang.org/x",
       matchBaseBranches: ["main"],
     },
 
@@ -124,6 +115,7 @@
         "actions/download-artifact",
       ],
       groupName: "artifact actions",
+      groupSlug: "artifact-actions",
       matchBaseBranches: ["main"],
     },
 
@@ -134,6 +126,7 @@
         "aquasecurity/trivy-action",
       ],
       groupName: "trivy actions",
+      groupSlug: "trivy-actions",
       matchBaseBranches: ["main"],
     },
 
