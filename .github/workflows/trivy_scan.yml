@@ -137,7 +137,7 @@ jobs:
         TRIVY_SKIP_JAVA_DB_UPDATE: true
     - name: Upload Trivy scan reports
       if: ${{ always() && steps.pull.conclusion == 'success' }}
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
       with:
         name: trivy-scan-reports
         path: trivy.*.txt
