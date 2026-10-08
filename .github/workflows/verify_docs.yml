@@ -12,15 +12,15 @@ jobs:
     runs-on: [ubuntu-latest]
     steps:
     - name: Check-out code
-      uses: actions/checkout@v5
+      uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
     - name: Set up Go using version from go.mod
-      uses: actions/setup-go@v5
+      uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff # v5
       with:
         go-version-file: 'go.mod'
     - name: Run verify scripts
       run: make verify
     - name: Checking for broken Markdown links for main branch
-      uses: gaurav-nelson/github-action-markdown-link-check@v1
+      uses: gaurav-nelson/github-action-markdown-link-check@5c5dfc0ac2e225883c0e5f03a85311ec2830d368 # v1
       with:
         folder-path: './docs'
         file-path: './README.md, ./CHANGELOG.md, ./CONTRIBUTING.md, ./GOVERNANCE.md, ./MAINTAINERS.md, ./ROADMAP.md, ./SECURITY.md'
